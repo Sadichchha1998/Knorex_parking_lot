@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author Vozon
+ *
+ */
+module KnorexAssignment {
+}
