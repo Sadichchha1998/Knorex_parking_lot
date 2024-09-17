@@ -1,0 +1,57 @@
+package com.masai.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.masai.exception.StudentException;
+import com.masai.model.Student;
+import com.masai.service.StudentService;
+ 
+
+@RestController
+@RequestMapping("/student")
+public class StudentController {
+	
+	@Autowired
+	private StudentService studentService;
+   @PostMapping("/stu")
+	public ResponseEntity<Student> registrationStudent( @ RequestBody Student student) throws StudentException{
+	Student stud	= studentService.regiterStudent(student);
+	return new  ResponseEntity<Student>(stud,HttpStatus.CREATED);
+		
+	}
+   @GetMapping
+   public ResponseEntity<List<Student>> getAllStudent(@RequestBody Student student) throws StudentException{
+	   
+	List<Student>  stu =  studentService.getAllStudent(student);
+	if (stu.isEmpty()) {
+		throw new StudentException("Student not found ...");
+	} else {
+	return new ResponseEntity<List<Student>>(stu,HttpStatus.OK);
+	}
+   }
+   @DeleteMapping("/{id}")
+   public ResponseEntity<Student> deleteStudentById(@PathVariable ("id") Integer id) throws StudentException{
+	  Student stu=studentService.deleteStudent(id);
+	 return new ResponseEntity<Student>(stu, HttpStatus.OK);
+   }
+   
+   
+   
+   @DeleteMapping("/byRoll/{roll}")
+   public ResponseEntity<Student> deleteByRollNumber(@PathVariable("roll") Integer roll) throws StudentException {
+       Student stu1 = studentService.deleteStudentByRoll(roll);
+       return new ResponseEntity<>(stu1, HttpStatus.OK); // Or use HttpStatus.NO_CONTENT for deletion
+   }
+	
+}

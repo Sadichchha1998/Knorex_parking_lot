@@ -1,0 +1,23 @@
+package com.masai.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.masai.exception.StudentException;
+import com.masai.model.Student;
+
+@Service
+public interface StudentService {
+
+	public Student regiterStudent(Student student) throws StudentException;
+	
+	public List<Student> getAllStudent(Student student) throws StudentException;
+	
+
+	 public Student deleteStudent(Integer id) throws StudentException;
+	 
+	 public Student deleteStudentByRoll(Integer roll) throws StudentException;
+	 
+	 
+}

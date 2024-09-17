@@ -1,0 +1,24 @@
+package com.masai.model;
+
+import java.util.Date;
+
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Student
+{
+	 private int studentId;
+	    private String firstName;
+	    private String lastName;
+	    private String email;
+	    private String subject;
+	    private String phoneNumber;
+	    private Date dateOfBirth;
+	    private String address;
+
+}

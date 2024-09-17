@@ -1,0 +1,110 @@
+package com.masai.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.masai.exception.ProductException;
+import com.masai.model.Product;
+import com.masai.repository.ProductRepository;
+@Service
+public class ProductServiceImpl  implements ProductService{
+    @Autowired
+	private ProductRepository productRepo;
+	@Override
+	public Product createProduct(Product product) {
+	return productRepo.save(product);
+	}
+
+	@Override
+	public Product getProductbyid(Integer id) throws ProductException {
+		// TODO Auto-generated method stub
+		 Optional<Product> opt =productRepo.findById(id);
+		 if (opt.isPresent()) {
+			 Product product=opt.get();
+			 return product;
+		 }else {
+			 throw new ProductException("product does not found with this id"); 
+		 }
+		
+	}
+
+	@Override
+	public List<Product> getAllProducts() throws ProductException {
+	     List<Product> listProduct = productRepo.findAll();
+	     if (listProduct.size()==0) {
+	    	 throw new ProductException("No student is there");
+	     }else {
+	    	 return listProduct;
+	     }
+	}
+
+	@Override
+	public Product deleteProductById(Integer id) throws ProductException {
+		   Optional<Product> opt =productRepo.findById(id);
+		   if (opt.isPresent()) {
+			        Product  existingProduct= opt.get();
+			         productRepo.delete(existingProduct);
+			         return existingProduct;
+		   }else {
+			   throw new ProductException("Product does not exist with id "+ id);
+		   }
+	}
+
+	@Override
+	public Product upadateProductdeatils(Product product) throws ProductException {
+	Optional<Product> opt = productRepo.findById(product.getId());
+	if (opt.isPresent()) {
+	Product updatedProduct=	productRepo.save(product);
+	return updatedProduct;
+	
+	}else {
+		throw new ProductException("Invalid product..");
+	}
+	}
+
+	@Override
+	public Product updateProductPrice(Integer id, Integer gracePrice) throws ProductException {
+
+	Product existingProduct=	productRepo.findById(id).
+			orElseThrow(()->new ProductException("product dose not exist"));
+	
+	existingProduct.setPrice(existingProduct.getPrice()+gracePrice);
+	 return productRepo.save(existingProduct);
+	}
+
+	@Override
+	public List<Product> getProductByPrice(Integer price) throws ProductException {
+	
+	List<Product> getPrice	= productRepo.findByPrice(price);
+	
+	if(getPrice.size()==0) {
+		throw new ProductException("this price of the product not available");
+	}else {
+		return getPrice;
+	}
+	
+	}
+
+//	@Override
+//	public List<Product> getProductByName(String name) throws ProductException {
+//		
+//	 List<Product> productName=	productRepo.findByName(name);
+//	 if (productName.isEmpty()) {
+//		 throw new ProductException("this name of the product Not available");
+//	 }else {
+//		 return productName;
+//	 }
+//	}
+	@Override
+	public List<Product> getProductByName(String name) throws ProductException {
+	    List<Product> productName = productRepo.findByName(name);
+	    if (productName.isEmpty()) {
+	        throw new ProductException("This name of the product is not available");
+	    } else {
+	        return productName;
+	    }
+	}
+}

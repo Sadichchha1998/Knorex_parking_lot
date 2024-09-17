@@ -1,0 +1,76 @@
+package com.masai.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.masai.exception.ProductException;
+import com.masai.model.Product;
+import com.masai.service.ProductService;
+
+
+@RestController
+@RequestMapping("/api/product")
+public class ProductController {
+     @Autowired
+	private ProductService productService;
+     
+     @PostMapping
+     public ResponseEntity<Product> createProduct(@RequestBody Product product) throws ProductException{
+    	 return new ResponseEntity<>(productService.createProduct(product),HttpStatus.CREATED);
+    	 
+     }
+	@GetMapping("/pro/{id}")
+     public ResponseEntity<Product> getProductById(@PathVariable ("id") Integer id) throws ProductException{
+    	 return new ResponseEntity<>(productService.getProductbyid(id),HttpStatus.ACCEPTED);
+     }
+	@GetMapping
+	public ResponseEntity<List<Product>> getAllProduct(@RequestBody Product product) throws ProductException{
+		return new ResponseEntity<List<Product>>(productService.getAllProducts(),HttpStatus.ACCEPTED);
+	}
+	
+	@DeleteMapping("del/{id}")
+	public ResponseEntity<Product> deleteProductById(@PathVariable ("id")Integer id) throws ProductException{
+		Product deletedProduct = productService.deleteProductById(id);
+		return new ResponseEntity<Product>(deletedProduct,HttpStatus.OK);
+	}
+	@PutMapping
+	public  ResponseEntity<Product> updateProductDetails(@RequestBody Product product) throws ProductException{
+		
+		 Product updatesProduct = productService.upadateProductdeatils(product);
+		 return new ResponseEntity<Product>(updatesProduct,HttpStatus.OK);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Product> updateProductPrice (@PathVariable ("id")Integer id,@RequestParam(value = "gPrice",required = false) Integer gPrice ) throws ProductException{
+		
+	Product upadtedPrice=	productService.updateProductPrice(id, gPrice);
+	return new ResponseEntity<Product>(upadtedPrice,HttpStatus.ACCEPTED);
+		
+	}
+	@GetMapping("/price")
+	public ResponseEntity< List<Product>>getProductByPrice( @PathVariable("price") Integer  price) throws ProductException{
+	      List<Product>   getPrice= productService.getProductByPrice(price);	
+	      return new ResponseEntity<List<Product>>(getPrice,HttpStatus.OK);
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+}

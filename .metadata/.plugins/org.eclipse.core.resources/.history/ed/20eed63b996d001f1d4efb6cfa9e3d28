@@ -1,0 +1,17 @@
+package com.masai.service;
+
+import org.springframework.stereotype.Service;
+
+import com.masai.exdeption.StudetException;
+import com.masai.model.Student;
+
+@Service
+public class studentServiceImpl  implements StudentService{
+
+	@Override
+	public Student regiterStudent(Student student) throws StudetException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

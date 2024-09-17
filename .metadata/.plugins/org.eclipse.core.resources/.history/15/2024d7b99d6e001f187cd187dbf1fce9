@@ -1,0 +1,79 @@
+package com.masai.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.masai.exception.StudentException;
+import com.masai.model.Student;
+import com.masai.repository.StudentRepository;
+
+@Service
+public class studentServiceImpl implements StudentService {
+	@Autowired
+	private StudentRepository studentrepo;
+
+	@Override
+	public Student regiterStudent(Student student) throws StudentException {
+
+		return studentrepo.save(student);
+
+	}
+
+	@Override
+	public List<Student> getAllStudent(Student student) throws StudentException {
+
+		List<Student> liStudent = studentrepo.findAll();
+		return liStudent;
+	}
+
+	@Override
+	public Student deleteStudent(Integer id) throws StudentException {
+		Optional<Student> opt = studentrepo.findById(id);
+		if (opt.isPresent()) {
+			Student existu = opt.get();
+			studentrepo.delete(existu);
+			return existu;
+		} else {
+			throw new StudentException("Student of this id not found");
+		}
+	}
+
+	@Override
+	public Student deleteStudentByRoll(Integer roll) throws StudentException {
+		Optional<Student> rolldel = studentrepo.findByRoll(roll);
+
+		// Check if student is present in the Optional
+		if (rolldel.isPresent()) {
+			Student student = rolldel.get();
+			studentrepo.delete(student);
+			return student;
+		} else {
+			throw new StudentException("Student not found");
+		}
+	}
+
+	@Override
+	public Student updateStudent(Student student) throws StudentException {
+		Optional<Student> opt = studentrepo.findByRoll(student.getRoll());
+		if (opt.isPresent()) {
+			Student updateStudent = studentrepo.save(student);
+			return updateStudent;
+		} else {
+			throw new StudentException("Student is not found");
+		}
+	}
+
+	@Override
+	public Student updateStudentMarks(Integer roll, Integer graceMarks) throws StudentException {
+
+		Student updateingStu = studentrepo.findByRoll(roll)
+				.orElseThrow(() -> new StudentException("Student does not exits with roll" + roll));
+
+		updateingStu.setMarks(updateingStu.getMarks() + graceMarks);
+		return studentrepo.save(updateingStu);
+	}
+
+}

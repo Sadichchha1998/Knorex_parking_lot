@@ -1,0 +1,46 @@
+package com.masai.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.masai.exdeption.StudentException;
+import com.masai.model.Student;
+import com.masai.repository.StudentRepository;
+
+@Service
+public class studentServiceImpl  implements StudentService{
+   @Autowired
+	private StudentRepository studentrepo;
+	@Override
+	public Student regiterStudent(Student student) throws StudentException {
+	
+   return studentrepo.save(student);
+  
+	}
+	@Override
+	public List<Student> getAllStudent(Student student) throws StudentException {
+	
+	List<Student> liStudent	= studentrepo.findAll();
+	return liStudent;
+	}
+	@Override
+	public Student deleteStudent( Integer id) throws StudentException {
+	   Optional<Student> opt=  studentrepo.findById(id);
+	   if(opt.isPresent()) {
+		   Student existu= opt.get();
+		   studentrepo.delete(existu);
+		   return existu;
+	   }else {
+		   throw new StudentException("Student of this id not found");
+	   }
+	}
+	@Override
+	public Student deleteStudentByRoll(Integer roll) throws StudentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
